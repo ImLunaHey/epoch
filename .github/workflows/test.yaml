@@ -9,15 +9,7 @@ on:
 permissions: write-all
 
 jobs:
-  can-run:
-    # Only run this in the forked repo after it's setup
-    if: ${{ github.repository != 'imlunahey/ts-template' && !'[ -d "template" ]' }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: exit 0
-
   lint:
-    needs: can-run
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +21,6 @@ jobs:
       - run: npm run lint
 
   coverage:
-    needs: can-run
     runs-on: ubuntu-latest
 
     steps:
@@ -46,7 +37,6 @@ jobs:
           commit-message: "chore: updating coverage badges"
 
   build:
-    needs: can-run
     runs-on: ubuntu-latest
 
     steps:

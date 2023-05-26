@@ -8,15 +8,7 @@ on:
       - main
 
 jobs:
-  can-run:
-    # Only run this in the forked repo after it's setup
-    if: ${{ github.repository != 'imlunahey/ts-template' && '![ -d "template" ]' }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: exit 0
-
   coverage:
-    needs: can-run
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
