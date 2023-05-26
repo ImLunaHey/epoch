@@ -18,9 +18,9 @@ class Jobs {
 
             logger.info('rate-limit', {
                 endpoint,
-                remaining: response.headers.get('x-ratelimit-remaining'),
-                reset: response.headers.get('x-ratelimit-reset'),
-                used: response.headers.get('x-ratelimit-used'),
+                remaining: Number(response.headers.get('x-ratelimit-remaining')),
+                reset: Number(response.headers.get('x-ratelimit-reset')),
+                used: Number(response.headers.get('x-ratelimit-used')),
             });
 
             const results = await response.json() as { data: { children: Record<string, { kind: 't1' | 't3'; media_metadata?: unknown; }>[]; } };
