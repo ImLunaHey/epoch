@@ -29,7 +29,7 @@ class Jobs {
         });
 
         for (const submission of submissions) {
-            logger.info('submission', submission as unknown as Record<string, unknown>);
+            logger.info('submission', JSON.parse(JSON.stringify(submission)) as Record<string, unknown>);
         }
     }
 
@@ -46,7 +46,7 @@ class Jobs {
         });
 
         for (const comment of comments) {
-            logger.info('comment', comment as unknown as Record<string, unknown>);
+            logger.info('comment', JSON.parse(JSON.stringify(comment)) as Record<string, unknown>);
         }
     }
 }
