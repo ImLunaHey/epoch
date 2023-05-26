@@ -23,39 +23,51 @@ class Jobs {
 
     @Cron(Expression.EVERY_10_SECONDS)
     async fetchNewPosts() {
-        const submissions = await client.getNew('all', {
-            limit: 100,
-        });
+        try {
+            const submissions = await client.getNew('all', {
+                limit: 100,
+            });
 
-        logger.info('rate-limit', {
-            endpoint: 'all/new',
-            expiration: client.ratelimitExpiration,
-            remaining: client.ratelimitRemaining,
-        });
+            logger.info('rate-limit', {
+                endpoint: 'all/submissions/new',
+                expiration: client.ratelimitExpiration,
+                remaining: client.ratelimitRemaining,
+            });
 
-        for (const data of submissions) {
-            const submission = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
-            if (submission.media_metadata) submission.media_metadata = JSON.stringify(submission.media_metadata);
-            logger.info('submission', this.filter(submission));
+            for (const data of submissions) {
+                const submission = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
+                if (submission.media_metadata) submission.media_metadata = JSON.stringify(submission.media_metadata);
+                logger.info('submission', this.filter(submission));
+            }
+        } catch (error: unknown) {
+            logger.error('Failed fetching new submissions', {
+                error,
+            });
         }
     }
 
     @Cron('*/3 * * * * *')
     async fetchNewComments() {
-        const comments = await client.getNewComments('all', {
-            limit: 100,
-        });
+        try {
+            const comments = await client.getNewComments('all', {
+                limit: 100,
+            });
 
-        logger.info('rate-limit', {
-            endpoint: 'all/new',
-            expiration: client.ratelimitExpiration,
-            remaining: client.ratelimitRemaining,
-        });
+            logger.info('rate-limit', {
+                endpoint: 'all/comments/new',
+                expiration: client.ratelimitExpiration,
+                remaining: client.ratelimitRemaining,
+            });
 
-        for (const data of comments) {
-            const comment = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
-            if (comment.media_metadata) comment.media_metadata = JSON.stringify(comment.media_metadata);
-            logger.info('comment', this.filter(comment));
+            for (const data of comments) {
+                const comment = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
+                if (comment.media_metadata) comment.media_metadata = JSON.stringify(comment.media_metadata);
+                logger.info('comment', this.filter(comment));
+            }
+        } catch (error: unknown) {
+            logger.error('Failed fetching new comments', {
+                error,
+            });
         }
     }
 }
