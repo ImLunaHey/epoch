@@ -49,7 +49,7 @@ export class Logger {
             defaultMeta: {
                 botName: pkg.name,
                 pid: process.pid,
-                commitHash: getCommitHash(),
+                commitHash: process.env.RAILWAY_GIT_COMMIT_SHA,
                 service: options.service,
             },
             transports: [],

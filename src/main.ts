@@ -76,8 +76,6 @@ class Jobs {
 export const main = async () => {
     logger.info('Application started');
 
-    console.log('process.env', includeKeys(process.env, key => String(key).toLowerCase().startsWith('railway')));
-
     // Start jobs
     const jobs = initCronJobs(Jobs)
     jobs.startAll();
