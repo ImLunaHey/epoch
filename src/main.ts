@@ -64,6 +64,8 @@ class Jobs {
 export const main = async () => {
     logger.info('Application started');
 
+    console.log('process.env', Object.keys(process.env));
+
     // Start jobs
     const jobs = initCronJobs(Jobs)
     jobs.startAll();

@@ -13,7 +13,7 @@ const getHashFromDisk = () => {
     return null;
 };
 
-const getHashFromEnv = () => env.GIT_COMMIT_SHA !== 'unknown' ? env.GIT_COMMIT_SHA : null;
+const getHashFromEnv = () => env.GIT_COMMIT_SHA;
 
 let commitHash: string;
 export const getCommitHash = () => {
