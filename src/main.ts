@@ -21,7 +21,7 @@ class Jobs {
         return excludeKeys(obj, key => String(key).startsWith('_')) as Record<string, unknown>;
     }
 
-    @Cron(Expression.EVERY_5_SECONDS)
+    @Cron('*/6 * * * * *')
     async fetchNewPosts() {
         try {
             const submissions = await client.getNew('all', {
@@ -46,7 +46,7 @@ class Jobs {
         }
     }
 
-    @Cron('*/2 * * * * *')
+    @Cron('*/1 * * * * *')
     async fetchNewComments() {
         try {
             const comments = await client.getNewComments('all', {
