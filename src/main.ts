@@ -17,7 +17,7 @@ const client = new Snoowrap({
 @Cron.UtcOffset(0)
 @Cron.Retry({ attempts: 2, delay: 1000 })
 class Jobs {
-    filter(obj: Submission | Comment): Record<string, unknown> {
+    filter(obj: Record<string, unknown>): Record<string, unknown> {
         return excludeKeys(obj, key => String(key).startsWith('_')) as Record<string, unknown>;
     }
 
@@ -33,8 +33,8 @@ class Jobs {
             remaining: client.ratelimitRemaining,
         });
 
-        for (const submission of submissions) {
-            // @ts-expect-error field exists on the object but isn't typed
+        for (const data of submissions) {
+            const submission = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
             if (submission.media_metadata) submission.media_metadata = JSON.stringify(submission.media_metadata);
             logger.info('submission', this.filter(submission));
         }
@@ -52,8 +52,8 @@ class Jobs {
             remaining: client.ratelimitRemaining,
         });
 
-        for (const comment of comments) {
-            // @ts-expect-error field exists on the object but isn't typed
+        for (const data of comments) {
+            const comment = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
             if (comment.media_metadata) comment.media_metadata = JSON.stringify(comment.media_metadata);
             logger.info('comment', this.filter(comment));
         }
