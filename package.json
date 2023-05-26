@@ -26,6 +26,7 @@
     "cron": "^1.8.2",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^7.2.1",
+    "filter-obj": "^5.1.0",
     "handlebars": "^4.7.7",
     "jsonc-parser": "^3.2.0",
     "node-fetch": "^3.3.1",
