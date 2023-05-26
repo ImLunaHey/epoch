@@ -2,29 +2,7 @@ import winston, { format, type Logger as WinstonLogger, createLogger } from 'win
 import { WinstonTransport as AxiomTransport } from '@axiomhq/axiom-node';
 import chalk from 'chalk';
 import * as pkg from '@app/../package.json';
-import fs from 'fs';
-import { env } from '@app/common/env';
-
-const getHashFromDisk = () => {
-    try {
-        const fileContents = fs.readFileSync('.git/HEAD').toString();
-        const rev = fileContents.trim().split(/.*[: ]/).slice(-1)[0];
-
-        if (rev.indexOf('/') === -1) return rev;
-        return fs.readFileSync('.git/' + rev).toString().trim();
-    } catch { }
-
-    return null;
-};
-
-const getHashFromEnv = () => env.GIT_COMMIT_SHA;
-
-let commitHash: string;
-const getCommitHash = () => {
-    if (commitHash) return commitHash;
-    commitHash = (getHashFromEnv() ?? getHashFromDisk() ?? 'unknown').substring(0, 12);
-    return commitHash;
-};
+import { getCommitHash } from '@app/common/get-commit-hash';
 
 const logLevelColours = {
     error: 'red',
