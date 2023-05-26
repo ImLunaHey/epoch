@@ -35,7 +35,7 @@ class Jobs {
 
         for (const submission of submissions) {
             // @ts-expect-error field exists on the object but isn't typed
-            if (Object.keys(submission).includes('media_metadata')) submission.media_metadata = JSON.stringify(submission.media_metadata);
+            if (submission.media_metadata) submission.media_metadata = JSON.stringify(submission.media_metadata);
             logger.info('submission', this.filter(submission));
         }
     }
@@ -54,7 +54,7 @@ class Jobs {
 
         for (const comment of comments) {
             // @ts-expect-error field exists on the object but isn't typed
-            if (Object.keys(comment).includes('media_metadata')) comment.media_metadata = JSON.stringify(comment.media_metadata);
+            if (comment.media_metadata) comment.media_metadata = JSON.stringify(comment.media_metadata);
             logger.info('comment', this.filter(comment));
         }
     }
