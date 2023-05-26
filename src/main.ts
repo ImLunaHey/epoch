@@ -40,7 +40,7 @@ class Jobs {
         }
     }
 
-    @Cron(Expression.EVERY_SECOND)
+    @Cron(Expression.EVERY_5_SECONDS)
     async fetchNewComments() {
         const comments = await client.getNewComments('all', {
             limit: 100,
