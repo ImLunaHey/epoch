@@ -46,7 +46,7 @@ class Jobs {
         }
     }
 
-    @Cron('*/3 * * * * *')
+    @Cron('*/2 * * * * *')
     async fetchNewComments() {
         try {
             const comments = await client.getNewComments('all', {
