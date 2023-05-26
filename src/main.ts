@@ -9,11 +9,21 @@ import fetch from 'node-fetch';
 class Jobs {
     @Cron(Expression.EVERY_30_SECONDS)
     async fetchNewPosts() {
-        const results = await (await fetch('https://www.reddit.com/r/all.json?sort=new&limit=100', {
+        const endpoint = 'https://www.reddit.com/r/all.json?sort=new&limit=100';
+        const response = await fetch(endpoint, {
             headers: {
                 'User-Agent': `epoch:${getCommitHash()} (by /u/ImLunaHey)`
             }
-        })).json() as { data: { children: Record<string, unknown>[] } };
+        });
+
+        logger.info('rate-limiting', {
+            endpoint,
+            remaining: Number(response.headers.get('x-ratelimit-remaining')),
+            reset: Number(response.headers.get('x-ratelimit-reset')),
+            used: Number(response.headers.get('x-ratelimit-used')),
+        });
+
+        const results = await response.json() as { data: { children: Record<string, unknown>[] } };
         for (const result of results.data.children) {
             logger.info('result', result);
         }
@@ -21,11 +31,21 @@ class Jobs {
 
     @Cron(Expression.EVERY_30_SECONDS)
     async fetchNewComments() {
-        const results = await (await fetch('https://www.reddit.com/r/all/comments.json?sort=new&limit=100', {
+        const endpoint = 'https://www.reddit.com/r/all/comments.json?sort=new&limit=100';
+        const response = await fetch(endpoint, {
             headers: {
                 'User-Agent': `epoch:${getCommitHash()} (by /u/ImLunaHey)`
             }
-        })).json() as { data: { children: Record<string, unknown>[] } };
+        });
+
+        logger.info('rate-limiting', {
+            endpoint,
+            remaining: Number(response.headers.get('x-ratelimit-remaining')),
+            reset: Number(response.headers.get('x-ratelimit-reset')),
+            used: Number(response.headers.get('x-ratelimit-used')),
+        });
+
+        const results = await response.json() as { data: { children: Record<string, unknown>[] } };
         for (const result of results.data.children) {
             logger.info('result', result);
         }
