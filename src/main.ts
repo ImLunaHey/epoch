@@ -46,7 +46,7 @@ class Jobs {
         }
     }
 
-    @Cron('*/2 * * * * *')
+    @Cron(Expression.EVERY_SECOND)
     async fetchNewComments() {
         try {
             const comments = await client.getNewComments('all', {
