@@ -7,7 +7,7 @@ import fetch from 'node-fetch';
 @Cron.UtcOffset(0)
 @Cron.Retry({ attempts: 2, delay: 1000 })
 class Jobs {
-    @Cron(Expression.EVERY_SECOND)
+    @Cron(Expression.EVERY_30_SECONDS)
     async fetchNewResults() {
         const results = await (await fetch('https://www.reddit.com/r/all/comments.json?sort=new', {
             headers: {
