@@ -8,7 +8,19 @@ import fetch from 'node-fetch';
 @Cron.Retry({ attempts: 2, delay: 1000 })
 class Jobs {
     @Cron(Expression.EVERY_30_SECONDS)
-    async fetchNewResults() {
+    async fetchNewPosts() {
+        const results = await (await fetch('https://www.reddit.com/r/all.json?sort=new', {
+            headers: {
+                'User-Agent': `epoch:${getCommitHash()} (by /u/ImLunaHey)`
+            }
+        })).json() as { data: { children: Record<string, unknown>[] } };
+        for (const result of results.data.children) {
+            logger.info('result', result);
+        }
+    }
+
+    @Cron(Expression.EVERY_30_SECONDS)
+    async fetchNewComments() {
         const results = await (await fetch('https://www.reddit.com/r/all/comments.json?sort=new', {
             headers: {
                 'User-Agent': `epoch:${getCommitHash()} (by /u/ImLunaHey)`
