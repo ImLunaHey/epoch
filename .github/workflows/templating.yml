@@ -1,0 +1,33 @@
+name: Run the templating
+
+on: [push]
+
+jobs:
+  run-templating:
+    # Don't run this in the template repo or more than once in the forked repo
+    if: ${{ github.repository != 'imlunahey/ts-template' && '[ -d "template" ]' }}
+    runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # by default, it uses a depth of 1
+          # this fetches all history so that we can read each commit
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm i handlebars
+      # Run the templating
+      - run:
+          node ./.github/workflows/templating.mjs
+      # Set github actions[bot] as the commiter
+      - run: |
+          git config --local user.name 'github-actions[bot]' && git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+      # Reset git
+      - run: |
+          git update-ref -d HEAD && git add -A && git commit -m "chore: init" && git push --force

@@ -1,0 +1,32 @@
+name: Coverage report
+
+permissions: write-all
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  can-run:
+    # Only run this in the forked repo after it's setup
+    if: ${{ github.repository != 'imlunahey/ts-template' && '![ -d "template" ]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
+
+  coverage:
+    needs: can-run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: npm ci
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        env:
+          SKIP_ENV_VALIDATION: true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          annotations: failed-tests
