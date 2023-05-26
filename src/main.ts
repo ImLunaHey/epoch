@@ -2,9 +2,9 @@ import 'reflect-metadata';
 import { Cron, Expression, initCronJobs } from '@reflet/cron';
 import { logger } from '@app/common/logger';
 import { getCommitHash } from '@app/common/get-commit-hash';
-import Snoowrap, { Comment, Submission } from 'snoowrap';
+import Snoowrap from 'snoowrap';
 import { env } from '@app/common/env';
-import { excludeKeys } from 'filter-obj';
+import { excludeKeys, includeKeys } from 'filter-obj';
 
 const client = new Snoowrap({
     userAgent: `epoch:${getCommitHash()} (by /u/ImLunaHey)`,
@@ -64,7 +64,7 @@ class Jobs {
 export const main = async () => {
     logger.info('Application started');
 
-    console.log('process.env', Object.keys(process.env));
+    console.log('process.env', includeKeys(process.env, key => String(key).toLowerCase().startsWith('railway')));
 
     // Start jobs
     const jobs = initCronJobs(Jobs)
