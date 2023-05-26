@@ -9,7 +9,7 @@ import fetch from 'node-fetch';
 class Jobs {
     @Cron(Expression.EVERY_30_SECONDS)
     async fetchNewPosts() {
-        const results = await (await fetch('https://www.reddit.com/r/all.json?sort=new', {
+        const results = await (await fetch('https://www.reddit.com/r/all.json?sort=new&limit=100', {
             headers: {
                 'User-Agent': `epoch:${getCommitHash()} (by /u/ImLunaHey)`
             }
@@ -21,7 +21,7 @@ class Jobs {
 
     @Cron(Expression.EVERY_30_SECONDS)
     async fetchNewComments() {
-        const results = await (await fetch('https://www.reddit.com/r/all/comments.json?sort=new', {
+        const results = await (await fetch('https://www.reddit.com/r/all/comments.json?sort=new&limit=100', {
             headers: {
                 'User-Agent': `epoch:${getCommitHash()} (by /u/ImLunaHey)`
             }
