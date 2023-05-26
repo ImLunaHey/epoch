@@ -21,7 +21,7 @@ class Jobs {
         return excludeKeys(obj, key => String(key).startsWith('_')) as Record<string, unknown>;
     }
 
-    @Cron(Expression.EVERY_30_SECONDS)
+    @Cron(Expression.EVERY_10_SECONDS)
     async fetchNewPosts() {
         const submissions = await client.getNew('all', {
             limit: 100,
@@ -40,7 +40,7 @@ class Jobs {
         }
     }
 
-    @Cron(Expression.EVERY_30_SECONDS)
+    @Cron(Expression.EVERY_10_SECONDS)
     async fetchNewComments() {
         const comments = await client.getNewComments('all', {
             limit: 100,
