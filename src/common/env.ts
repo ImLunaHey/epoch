@@ -15,11 +15,6 @@ const schema = z.object({
      */
     LOG_LEVEL: z.enum(['info', 'timer', 'debug', 'warn', 'error']).optional(),
     /**
-     * URL to the current DB
-     * e.g. mysql://localhost:9100
-     */
-    DATABASE_URL: z.string(),
-    /**
      * The current commit hash of this deployment
      */
     GIT_COMMIT_SHA: z.string().optional(),
@@ -28,7 +23,6 @@ const schema = z.object({
 const processEnv = {
     NODE_ENV: process.env.NODE_ENV,
     LOG_LEVEL: process.env.LOG_LEVEL ?? 'info',
-    DATABASE_URL: process.env.DATABASE_URL,
     GIT_COMMIT_SHA: process.env.RAILWAY_GIT_COMMIT_SHA || process.env.GIT_COMMIT_SHA,
 } satisfies Parameters<typeof schema.safeParse>[0];
 
