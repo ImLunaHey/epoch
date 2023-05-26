@@ -30,6 +30,7 @@
     "jsonc-parser": "^3.2.0",
     "node-fetch": "^3.3.1",
     "reflect-metadata": "^0.1.13",
+    "snoowrap": "^1.23.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "tsup": "^6.7.0",

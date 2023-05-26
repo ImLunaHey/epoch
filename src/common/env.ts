@@ -18,12 +18,18 @@ const schema = z.object({
      * The current commit hash of this deployment
      */
     GIT_COMMIT_SHA: z.string().optional(),
+    CLIENT_ID: z.string(),
+    CLIENT_SECRET: z.string(),
+    REFRESH_TOKEN: z.string(),
 });
 
 const processEnv = {
     NODE_ENV: process.env.NODE_ENV,
     LOG_LEVEL: process.env.LOG_LEVEL ?? 'info',
     GIT_COMMIT_SHA: process.env.RAILWAY_GIT_COMMIT_SHA || process.env.GIT_COMMIT_SHA,
+    CLIENT_ID: process.env.CLIENT_ID,
+    CLIENT_SECRET: process.env.CLIENT_SECRET,
+    REFRESH_TOKEN: process.env.REFRESH_TOKEN,
 } satisfies Parameters<typeof schema.safeParse>[0];
 
 // --------------------------

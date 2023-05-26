@@ -2,49 +2,52 @@ import 'reflect-metadata';
 import { Cron, Expression, initCronJobs } from '@reflet/cron';
 import { logger } from '@app/common/logger';
 import { getCommitHash } from '@app/common/get-commit-hash';
-import fetch from 'node-fetch';
+import Snoowrap from 'snoowrap';
+import { env } from '@app/common/env';
+
+const client = new Snoowrap({
+    userAgent: `epoch:${getCommitHash()} (by /u/ImLunaHey)`,
+    clientId: env.CLIENT_ID,
+    clientSecret: env.CLIENT_SECRET,
+    refreshToken: env.REFRESH_TOKEN,
+});
 
 @Cron.RunOnInit()
 @Cron.UtcOffset(0)
 @Cron.Retry({ attempts: 2, delay: 1000 })
 class Jobs {
-    async fetch(endpoint: string) {
-        try {
-            const response = await fetch(endpoint, {
-                headers: {
-                    'User-Agent': `epoch:${getCommitHash()} (by /u/ImLunaHey)`
-                }
-            });
+    @Cron(Expression.EVERY_30_SECONDS)
+    async fetchNewPosts() {
+        const submissions = await client.getNew('all', {
+            limit: 100,
+        });
 
-            logger.info('rate-limit', {
-                endpoint,
-                remaining: Number(response.headers.get('x-ratelimit-remaining')),
-                reset: Number(response.headers.get('x-ratelimit-reset')),
-                used: Number(response.headers.get('x-ratelimit-used')),
-            });
+        logger.info('rate-limit', {
+            endpoint: 'all/new',
+            expiration: client.ratelimitExpiration,
+            remaining: client.ratelimitRemaining,
+        });
 
-            const results = await response.json() as { data: { children: Record<string, { kind: 't1' | 't3'; media_metadata?: unknown; }>[]; } };
-
-            for (const result of results.data.children) {
-                // Stringify to avoid hitting axiom's field limit
-                if (Object.keys(result.data).includes('media_metadata')) result.data.media_metadata = JSON.stringify(result.data.media_metadata);
-                logger.info('result', result);
-            }
-        } catch (error: unknown) {
-            logger.error('error', {
-                error,
-            });
+        for (const submission of submissions) {
+            logger.info('submission', submission as unknown as Record<string, unknown>);
         }
     }
 
     @Cron(Expression.EVERY_30_SECONDS)
-    async fetchNewPosts() {
-        await this.fetch('https://www.reddit.com/r/all.json?sort=new&limit=100');
-    }
-
-    @Cron(Expression.EVERY_30_SECONDS)
     async fetchNewComments() {
-        await this.fetch('https://www.reddit.com/r/all/comments.json?sort=new&limit=100');
+        const comments = await client.getNewComments('all', {
+            limit: 100,
+        });
+
+        logger.info('rate-limit', {
+            endpoint: 'all/new',
+            expiration: client.ratelimitExpiration,
+            remaining: client.ratelimitRemaining,
+        });
+
+        for (const comment of comments) {
+            logger.info('comment', comment as unknown as Record<string, unknown>);
+        }
     }
 }
 
