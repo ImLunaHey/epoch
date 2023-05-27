@@ -108,6 +108,9 @@ export class Logger {
         if (meta?.error && !(meta?.error instanceof Error)) meta.error = new Error(`Unknown Error: ${String(meta.error)}`);
         this.logger.error(message, meta);
 
+        // Don't bother logging errors that're extended properly
+        if (meta?.error instanceof Error) return;
+
         // Also log errors to stderr for now
         // This needs to remain until the issue with winston not serialising errors is fixed
         console.log(message, meta);
