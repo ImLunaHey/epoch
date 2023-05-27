@@ -4,13 +4,20 @@ import { logger } from '@app/common/logger';
 import { getCommitHash } from '@app/common/get-commit-hash';
 import Snoowrap from 'snoowrap';
 import { env } from '@app/common/env';
-import { excludeKeys, includeKeys } from 'filter-obj';
+import { excludeKeys } from 'filter-obj';
 
-const client = new Snoowrap({
-    userAgent: `epoch:${getCommitHash()} (by /u/ImLunaHey)`,
-    clientId: env.CLIENT_ID,
-    clientSecret: env.CLIENT_SECRET,
-    refreshToken: env.REFRESH_TOKEN,
+const submissionClient = new Snoowrap({
+    userAgent: `epoch:submission-cacher:${getCommitHash()} (by /u/ImLunaHey)`,
+    clientId: env.SUBMISSION_CLIENT_ID,
+    clientSecret: env.SUBMISSION_CLIENT_SECRET,
+    refreshToken: env.SUBMISSION_REFRESH_TOKEN,
+});
+
+const commentClient = new Snoowrap({
+    userAgent: `epoch:comment-cacher${getCommitHash()} (by /u/ImLunaHey)`,
+    clientId: env.COMMENT_CLIENT_ID,
+    clientSecret: env.COMMENT_CLIENT_SECRET,
+    refreshToken: env.COMMENT_REFRESH_TOKEN,
 });
 
 @Cron.RunOnInit()
@@ -21,17 +28,17 @@ class Jobs {
         return excludeKeys(obj, key => String(key).startsWith('_')) as Record<string, unknown>;
     }
 
-    @Cron(Expression.EVERY_5_SECONDS)
+    @Cron(Expression.EVERY_SECOND)
     async fetchNewPosts() {
         try {
-            const submissions = await client.getNew('all', {
+            const submissions = await submissionClient.getNew('all', {
                 limit: 100,
             });
 
             logger.info('rate-limit', {
                 endpoint: 'all/submissions/new',
-                expiration: client.ratelimitExpiration,
-                remaining: client.ratelimitRemaining,
+                expiration: submissionClient.ratelimitExpiration,
+                remaining: submissionClient.ratelimitRemaining,
             });
 
             for (const data of submissions) {
@@ -46,17 +53,17 @@ class Jobs {
         }
     }
 
-    @Cron(Expression.EVERY_5_SECONDS)
+    @Cron(Expression.EVERY_SECOND)
     async fetchNewComments() {
         try {
-            const comments = await client.getNewComments('all', {
+            const comments = await commentClient.getNewComments('all', {
                 limit: 100,
             });
 
             logger.info('rate-limit', {
                 endpoint: 'all/comments/new',
-                expiration: client.ratelimitExpiration,
-                remaining: client.ratelimitRemaining,
+                expiration: commentClient.ratelimitExpiration,
+                remaining: commentClient.ratelimitRemaining,
             });
 
             for (const data of comments) {

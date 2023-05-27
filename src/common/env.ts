@@ -18,18 +18,24 @@ const schema = z.object({
      * The current commit hash of this deployment
      */
     GIT_COMMIT_SHA: z.string().optional(),
-    CLIENT_ID: z.string(),
-    CLIENT_SECRET: z.string(),
-    REFRESH_TOKEN: z.string(),
+    SUBMISSION_CLIENT_ID: z.string(),
+    SUBMISSION_CLIENT_SECRET: z.string(),
+    SUBMISSION_REFRESH_TOKEN: z.string(),
+    COMMENT_CLIENT_ID: z.string(),
+    COMMENT_CLIENT_SECRET: z.string(),
+    COMMENT_REFRESH_TOKEN: z.string(),
 });
 
 const processEnv = {
     NODE_ENV: process.env.NODE_ENV,
     LOG_LEVEL: process.env.LOG_LEVEL ?? 'info',
     GIT_COMMIT_SHA: process.env.RAILWAY_GIT_COMMIT_SHA ?? process.env.GIT_COMMIT_SHA,
-    CLIENT_ID: process.env.CLIENT_ID,
-    CLIENT_SECRET: process.env.CLIENT_SECRET,
-    REFRESH_TOKEN: process.env.REFRESH_TOKEN,
+    SUBMISSION_CLIENT_ID: process.env.SUBMISSION_CLIENT_ID,
+    SUBMISSION_CLIENT_SECRET: process.env.SUBMISSION_CLIENT_SECRET,
+    SUBMISSION_REFRESH_TOKEN: process.env.SUBMISSION_REFRESH_TOKEN,
+    COMMENT_CLIENT_ID: process.env.COMMENT_CLIENT_ID,
+    COMMENT_CLIENT_SECRET: process.env.COMMENT_CLIENT_SECRET,
+    COMMENT_REFRESH_TOKEN: process.env.COMMENT_REFRESH_TOKEN,
 } satisfies Parameters<typeof schema.safeParse>[0];
 
 // --------------------------
