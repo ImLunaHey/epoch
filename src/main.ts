@@ -1,23 +1,33 @@
 import 'reflect-metadata';
 import { Cron, Expression, initCronJobs } from '@reflet/cron';
 import { logger } from '@app/common/logger';
-import { getCommitHash } from '@app/common/get-commit-hash';
 import Snoowrap from 'snoowrap';
 import { env } from '@app/common/env';
 import { excludeKeys } from 'filter-obj';
+import { getCommitHash } from '@app/common/get-commit-hash';
 
 const submissionClient = new Snoowrap({
-    userAgent: `epoch:submission-cacher:${getCommitHash()} (by /u/ImLunaHey)`,
+    userAgent: `epoch:submission-cacher (${getCommitHash()})`,
     clientId: env.SUBMISSION_CLIENT_ID,
     clientSecret: env.SUBMISSION_CLIENT_SECRET,
     refreshToken: env.SUBMISSION_REFRESH_TOKEN,
 });
 
+submissionClient.config({
+    continueAfterRatelimitError: true,
+    maxRetryAttempts: 10,
+});
+
 const commentClient = new Snoowrap({
-    userAgent: `epoch:comment-cacher${getCommitHash()} (by /u/ImLunaHey)`,
+    userAgent: `epoch:comment-cacher (${getCommitHash()})`,
     clientId: env.COMMENT_CLIENT_ID,
     clientSecret: env.COMMENT_CLIENT_SECRET,
     refreshToken: env.COMMENT_REFRESH_TOKEN,
+});
+
+commentClient.config({
+    continueAfterRatelimitError: true,
+    maxRetryAttempts: 10,
 });
 
 @Cron.RunOnInit()

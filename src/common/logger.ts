@@ -2,7 +2,6 @@ import winston, { format, type Logger as WinstonLogger, createLogger } from 'win
 import { WinstonTransport as AxiomTransport } from '@axiomhq/axiom-node';
 import chalk from 'chalk';
 import * as pkg from '@app/../package.json';
-import { getCommitHash } from '@app/common/get-commit-hash';
 
 const logLevelColours = {
     error: 'red',
