@@ -27,7 +27,6 @@ const commentClient = new Snoowrap({
 commentClient.config({
     maxRetryAttempts: 10,
 });
-
 @Cron.RunOnInit()
 @Cron.UtcOffset(0)
 @Cron.Retry({ attempts: 2, delay: 1000 })
@@ -36,7 +35,7 @@ class Jobs {
         return excludeKeys(obj, key => String(key).startsWith('_')) as Record<string, unknown>;
     }
 
-    @Cron(Expression.EVERY_5_SECONDS)
+    @Cron(Expression.EVERY_SECOND)
     async fetchNewPosts() {
         try {
             const submissions = await submissionClient.getNew('all', {
@@ -61,7 +60,7 @@ class Jobs {
         }
     }
 
-    @Cron(Expression.EVERY_5_SECONDS)
+    @Cron(Expression.EVERY_SECOND)
     async fetchNewComments() {
         try {
             const comments = await commentClient.getNewComments('all', {
