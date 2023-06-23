@@ -14,7 +14,6 @@ const submissionClient = new Snoowrap({
 });
 
 submissionClient.config({
-    continueAfterRatelimitError: true,
     maxRetryAttempts: 10,
 });
 
@@ -26,7 +25,6 @@ const commentClient = new Snoowrap({
 });
 
 commentClient.config({
-    continueAfterRatelimitError: true,
     maxRetryAttempts: 10,
 });
 
