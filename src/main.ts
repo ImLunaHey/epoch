@@ -52,7 +52,7 @@ class Jobs {
                 const submission = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
                 if (submission.media_metadata) submission.media_metadata = JSON.stringify(submission.media_metadata);
                 for (const key of Object.keys(submission)) {
-                    if (key.startsWith('expression_asset_data') delete submission[key];
+                    if (key.startsWith('expression_asset_data')) delete submission[key];
                 }
                 logger.info('submission', this.filter(submission));
             }
@@ -80,7 +80,7 @@ class Jobs {
                 const comment = JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
                 if (comment.media_metadata) comment.media_metadata = JSON.stringify(comment.media_metadata);
                 for (const key of Object.keys(comment)) {
-                    if (key.startsWith('expression_asset_data') delete comment[key];
+                    if (key.startsWith('expression_asset_data')) delete comment[key];
                 }
                 logger.info('comment', this.filter(comment));
             }
